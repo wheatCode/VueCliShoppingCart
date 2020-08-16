@@ -38,7 +38,7 @@
         </div>
       </div>
     </div>
-    <ProductCard :product="product"></ProductCard>
+    <ProductCard :product="product" @addCart="addCart"></ProductCard>
   </div>
 </template>
 
@@ -64,14 +64,19 @@ export default {
       const { data } = await this.$http.get(api);
       const { products } = data;
       this.products = [...products];
-      console.log(this.products);
     },
-    async getProduct(productId) {
-      const api = `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/product/${productId}`;
+    async getProduct(id) {
+      const api = `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/product/${id}`;
       const { data } = await this.$http.get(api);
       const { product } = data;
       this.product = { ...product };
-      console.log(this.product);
+    },
+    async addCart(id, num, resolve) {
+      const productData = { product_id: id, qty: num };
+      const api = `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/cart`;
+      const { data } = await this.$http.post(api, { data: productData });
+      resolve('');
+      console.log(data);
     }
   }
 };

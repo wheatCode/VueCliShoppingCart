@@ -1,19 +1,8 @@
 <template>
   <div>
-    <!-- Button trigger modal -->
-    <button
-      type="button"
-      class="btn btn-primary"
-      data-toggle="modal"
-      data-target="#exampleModal"
-    >
-      Launch demo modal
-    </button>
-
-    <!-- Modal -->
     <div
       class="modal fade"
-      id="exampleModal"
+      id="productCard"
       tabindex="-1"
       role="dialog"
       aria-labelledby="exampleModalLabel"
@@ -45,7 +34,7 @@
                 >現在只要 {{ aProduct.price }} 元</span
               >
             </div>
-            <select class="form-control custom-select" v-model="num">
+            <select class="form-control custom-select" v-model="aProduct.num">
               <option v-for="n in 10" :key="n" :value="n"
                 >選購 {{ n }} 堂</option
               >
@@ -53,9 +42,11 @@
           </div>
           <div class="modal-footer">
             <span class="small font-weight-bold text-muted"
-              >小計 {{ aProduct.price * num }} 元</span
+              >小計 {{ aProduct.price * aProduct.num }} 元</span
             >
-            <button type="button" class="btn btn-primary">加到購物車</button>
+            <button type="button" class="btn btn-primary" @click="addCart">
+              加到購物車
+            </button>
           </div>
         </div>
       </div>
@@ -64,6 +55,8 @@
 </template>
 
 <script>
+import $ from 'jquery';
+
 export default {
   components: {},
   props: {
@@ -73,12 +66,29 @@ export default {
   data() {
     return {
       aProduct: {},
-      num: 1
+      canOpenCart: false
     };
+  },
+  methods: {
+    toggleCart() {
+      this.canOpenCart
+        ? $('#productCard').modal('show')
+        : $('#productCard').modal('hide');
+    },
+    async addCart() {
+      await new Promise(resolve =>
+        this.$emit('addCart', this.aProduct.id, this.aProduct.num, resolve)
+      );
+      this.canOpenCart = false;
+    }
   },
   watch: {
     product() {
-      this.aProduct = { ...this.product };
+      this.aProduct = { ...this.product, num: 1 };
+      this.canOpenCart = true;
+    },
+    canOpenCart() {
+      this.toggleCart();
     }
   }
 };
