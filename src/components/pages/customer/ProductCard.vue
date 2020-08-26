@@ -36,8 +36,8 @@
             </div>
             <select class="form-control custom-select" v-model="aProduct.num">
               <option v-for="n in 10" :key="n" :value="n"
-                >選購 {{ n }} 堂</option
-              >
+                >選購 {{ n + ' ' + aProduct.unit }}
+              </option>
             </select>
           </div>
           <div class="modal-footer">
@@ -65,13 +65,12 @@ export default {
   },
   data() {
     return {
-      aProduct: {},
-      canOpenCart: false
+      aProduct: {}
     };
   },
   methods: {
-    toggleCart() {
-      this.canOpenCart
+    toggleCart(canOpenCart) {
+      canOpenCart
         ? $('#productCard').modal('show')
         : $('#productCard').modal('hide');
     },
@@ -79,16 +78,14 @@ export default {
       await new Promise(resolve =>
         this.$emit('addCart', this.aProduct.id, this.aProduct.num, resolve)
       );
-      this.canOpenCart = false;
+      this.toggleCart(false);
     }
   },
   watch: {
     product() {
       this.aProduct = { ...this.product, num: 1 };
-      this.canOpenCart = true;
-    },
-    canOpenCart() {
-      this.toggleCart();
+      console.log(this.aProduct);
+      this.toggleCart(true);
     }
   }
 };
