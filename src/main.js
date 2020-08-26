@@ -1,12 +1,12 @@
 import Vue from 'vue';
 import App from './App.vue';
-import router from './package/router';
-import I18n from './package/veevalidate';
-import './package/bootstrap';
-import './package/axios';
-import './package/vueLoadingOverlay';
-import './package/fontawesome/';
-import './package/eventbus';
+import router from './packages/router';
+import I18n from './packages/veevalidate';
+import './packages/bootstrap';
+import './packages/axios';
+import './packages/vueLoadingOverlay';
+import './packages/fontawesome/';
+import './packages/eventbus';
 
 Vue.config.productionTip = false;
 

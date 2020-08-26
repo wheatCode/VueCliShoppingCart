@@ -8,33 +8,49 @@
         <h6
           class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
         >
-          123
+          管理員
         </h6>
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link active" href="#">
+            <router-link
+              class="nav-link"
+              :class="{ active: $route.fullPath === '/admin/product' }"
+              to="/admin/product"
+            >
               <span>產品列標</span>
-            </a>
+            </router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <router-link
+              class="nav-link"
+              :class="{ active: $route.fullPath === '/admin/order' }"
+              to="/admin/order"
+            >
               <span>訂單列表</span>
-            </a>
+            </router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <router-link
+              class="nav-link"
+              :class="{ active: $route.fullPath === '/admin/coupon' }"
+              to="/admin/coupon"
+            >
               <span>優惠券</span>
-            </a>
+            </router-link>
           </li>
         </ul>
         <h6
           class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
         >
-          123
+          客戶
         </h6>
         <ul class="nav flex-column">
           <li class="nav-item">
-            <router-link class="nav-link" to="/order">
+            <router-link
+              class="nav-link"
+              :class="{ active: $route.fullPath === '/customer/order' }"
+              to="/customer/order"
+            >
               <span>模擬訂單</span>
             </router-link>
           </li>
