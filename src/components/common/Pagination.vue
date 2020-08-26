@@ -2,8 +2,21 @@
   <div>
     <nav aria-label="Page navigation example">
       <ul class="pagination">
-        <li class="page-item" :class="{ disabled: !pagination.has_pre }">
-          <router-link class="page-link" to="/products" aria-label="Previous">
+        <li
+          class="page-item"
+          :class="{
+            disabled: !pagination.has_pre
+          }"
+          @click="getProducts(previousPage, !pagination.has_pre)"
+        >
+          <router-link
+            class="page-link"
+            :to="{
+              path: '/admin/product',
+              query: { page: `${previousPage}` }
+            }"
+            aria-label="Previous"
+          >
             <span aria-hidden="true">&laquo;</span>
             <span class="sr-only">Previous</span>
           </router-link>
@@ -14,16 +27,32 @@
           :key="page"
           @click="getProducts(page)"
         >
-          <a class="page-link" href="#">{{ page }}</a>
+          <router-link
+            class="page-link"
+            :to="{ path: '/admin/product', query: { page: `${page}` } }"
+            >{{ page }}</router-link
+          >
         </li>
-        <li class="page-item" :class="{ disabled: !pagination.has_next }">
-          <a class="page-link" href="#" aria-label="Next">
+        <li
+          class="page-item"
+          :class="{
+            disabled: !pagination.has_next
+          }"
+          @click="getProducts(nextPage, !pagination.has_next)"
+        >
+          <router-link
+            class="page-link"
+            :to="{
+              path: '/admin/product',
+              query: { page: `${nextPage}` }
+            }"
+            aria-label="Next"
+          >
             <span aria-hidden="true">&raquo;</span>
             <span class="sr-only">Next</span>
-          </a>
+          </router-link>
         </li>
       </ul>
-      s
     </nav>
   </div>
 </template>
@@ -36,13 +65,16 @@ export default {
     }
   },
   methods: {
-    getProducts(page) {
-      this.$emit('getProducts', null, page);
+    getProducts(page, readOnly = false) {
+      readOnly ? '' : this.$emit('getProducts', null, page);
     }
   },
-  watch: {
-    pagination() {
-      console.log(this.pagination);
+  computed: {
+    previousPage() {
+      return parseInt(this.$route.query.page || 1) - 1;
+    },
+    nextPage() {
+      return parseInt(this.$route.query.page || 1) + 1;
     }
   }
 };

@@ -86,20 +86,21 @@ export default {
     this.getProducts();
   },
   methods: {
-    async getProducts(resolve = null, page = 1) {
+    async getProducts(resolve = null, page) {
       const loader = this.loader.show();
-      const api = `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/admin/products?page=${page}`;
+      const api = `${process.env.VUE_APP_URL}/api/${
+        process.env.VUE_APP_API_PATH
+      }/admin/products?page=${page || this.$route.query.page || 1}`;
+      console.log(this.$route.query.page);
       const { data } = await this.$http.get(api);
       const { success } = data;
-      console.log('success: ', success);
-      if (!success) {
-        this.$router.push('/login');
-      }
+      !success ? this.$router.push('/login') : '';
       const { products, pagination } = data;
       this.allProducts = [...products];
       this.pagination = {
         ...pagination
       };
+      console.log(this.$route.query.page);
       resolve ? resolve('') : '';
       loader.hide();
     },
@@ -123,15 +124,6 @@ export default {
       num = '$' + String(num).replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
       return num;
     }
-  },
-  watch: {
-    products() {
-      this.allProducts = {
-        ...this.products
-      };
-    }
   }
 };
 </script>
-
-<style scope></style>
