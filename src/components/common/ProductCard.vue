@@ -11,7 +11,8 @@
         <div class="modal-content border-0">
           <div class="modal-header bg-dark text-white">
             <h5 class="modal-title" id="exampleModalLabel">
-              <span>新增產品</span>
+              <span v-if="!Aproduct.id">新增產品</span>
+              <span v-else>修改產品</span>
             </h5>
             <button
               type="button"
@@ -59,10 +60,16 @@
                   <input
                     type="text"
                     class="form-control"
+                    :class="{ 'is-invalid': errors.has('標題') }"
                     id="title"
+                    name="標題"
                     placeholder="請輸入標題"
+                    v-validate="'required'"
                     v-model="Aproduct.title"
                   />
+                  <span v-if="errors.has('標題')" class="text-danger">
+                    {{ errors.first('標題') }}</span
+                  >
                 </div>
 
                 <div class="form-row">
@@ -71,43 +78,81 @@
                     <input
                       type="text"
                       class="form-control"
+                      :class="{ 'is-invalid': errors.has('分類') }"
                       id="category"
+                      name="分類"
                       placeholder="請輸入分類"
+                      v-validate="'required'"
                       v-model="Aproduct.category"
                     />
+                    <span v-if="errors.has('分類')" class="text-danger">{{
+                      errors.first('分類')
+                    }}</span>
                   </div>
                   <div class="form-group col-md-6">
                     <label for="price">單位</label>
                     <input
                       type="unit"
                       class="form-control"
+                      :class="{ 'is-invalid': errors.has('單位') }"
                       id="unit"
+                      name="單位"
                       placeholder="請輸入單位"
                       v-model="Aproduct.unit"
+                      v-validate="'required'"
                     />
+                    <span v-if="errors.has('單位')" class="text-danger">{{
+                      errors.first('單位')
+                    }}</span>
                   </div>
                 </div>
-
                 <div class="form-row">
                   <div class="form-group col-md-6">
                     <label for="origin_price">原價</label>
                     <input
                       type="number"
                       class="form-control"
+                      :class="{ 'is-invalid': errors.has('原價') }"
                       id="origin_price"
+                      name="原價"
                       placeholder="請輸入原價"
                       v-model="Aproduct.origin_price"
+                      v-validate="'required|min_value:0'"
                     />
+                    <span v-if="errors.has('原價')" class="text-danger">{{
+                      errors.first('原價')
+                    }}</span>
                   </div>
                   <div class="form-group col-md-6">
                     <label for="price">售價</label>
                     <input
                       type="number"
                       class="form-control"
+                      oninput="value = value.replace(/[^\d]/g, '')"
+                      :class="{
+                        'is-invalid': Aproduct.origin_price
+                          ? errors.has('售價')
+                          : false
+                      }"
                       id="price"
+                      name="售價"
                       placeholder="請輸入售價"
                       v-model="Aproduct.price"
+                      v-validate="
+                        `required|min_value:0|max_value:${
+                          Aproduct.origin_price ? Aproduct.origin_price : 0
+                        }`
+                      "
+                      :disabled="!Aproduct.origin_price ? true : false"
                     />
+                    <span
+                      v-if="Aproduct.origin_price ? errors.has('售價') : false"
+                      class="text-danger"
+                      >{{ errors.first('售價') }}</span
+                    >
+                    <span v-if="!Aproduct.origin_price" class="text-primary">
+                      請先輸入原價
+                    </span>
                   </div>
                 </div>
                 <hr />
@@ -117,20 +162,32 @@
                   <textarea
                     type="text"
                     class="form-control"
+                    :class="{ 'is-invalid': errors.has('產品描述') }"
                     id="description"
+                    name="產品描述"
                     placeholder="請輸入產品描述"
                     v-model="Aproduct.description"
+                    v-validate="'required'"
                   ></textarea>
+                  <span v-if="errors.has('產品描述')" class="text-danger">{{
+                    errors.first('產品描述')
+                  }}</span>
                 </div>
                 <div class="form-group">
                   <label for="content">說明內容</label>
                   <textarea
                     type="text"
                     class="form-control"
+                    :class="{ 'is-invalid': errors.has('說明內容') }"
                     id="content"
+                    name="說明內容"
                     placeholder="請輸入產品說明內容"
                     v-model="Aproduct.content"
+                    v-validate="'required'"
                   ></textarea>
+                  <span v-if="errors.has('說明內容')" class="text-danger">{{
+                    errors.first('說明內容')
+                  }}</span>
                 </div>
                 <div class="form-group">
                   <div class="form-check">
@@ -148,7 +205,7 @@
               </div>
             </div>
           </div>
-          <div class="modal-footer">
+          <div class="modal-footer" style="position: relative">
             <button
               type="button"
               class="btn btn-outline-secondary"
@@ -161,7 +218,12 @@
               class="btn btn-primary"
               @click="submitProduct((id = Aproduct.id || ''))"
             >
-              確認
+              <span v-if="isSubmit === false">確認</span>
+              <font-awesome-icon
+                v-else-if="isSubmit === true"
+                icon="spinner"
+                class="fa-spin"
+              />
             </button>
           </div>
         </div>
@@ -224,7 +286,9 @@ export default {
   components: {},
   data() {
     return {
-      Aproduct: {}
+      Aproduct: {},
+      isLoading: false,
+      isSubmit: false
     };
   },
   methods: {
@@ -234,6 +298,7 @@ export default {
         : $('#productCard').modal('hide');
     },
     async submitProduct(id) {
+      this.isSubmit = true;
       const api = `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/admin/product`;
       if (id) {
         await this.editProduct(api, id);
@@ -242,6 +307,7 @@ export default {
       }
       new Promise(resolve => this.$emit('getProducts', resolve));
       this.toggleCard(false);
+      this.isSubmit = false;
     },
     async createProduct(api) {
       await this.$http.post(api, { data: this.Aproduct });
@@ -255,9 +321,8 @@ export default {
   watch: {
     product() {
       this.Aproduct = { ...this.product };
-
+      this.errors.clear();
       this.toggleCard(true);
-      console.log(this.Aproduct);
     }
   }
 };

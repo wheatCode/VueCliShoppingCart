@@ -1,7 +1,7 @@
 module.exports = {
   // "printWidth": 80, // 每行程式碼長度（預設80）
-  // "tabWidth": 2, // 每個tab相當於多少個空格（預設2）
-  // "useTabs": false, // 是否使用tab進行縮排（預設false）
+  // tabWidth: 2, // 每個tab相當於多少個空格（預設2）
+  // useTabs: false, // 是否使用tab進行縮排（預設false）
   singleQuote: true, // 使用單引號（預設false）
   semi: true // 宣告結尾使用分號(預設true)
   // "trailingComma": "all", // 多行使用拖尾逗號（預設none）

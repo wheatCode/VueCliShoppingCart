@@ -18,9 +18,8 @@ const routes = [
   },
   {
     path: '/',
-    name: 'Home',
+    redirect: '/products',
     component: Home,
-    meta: { requiresAuth: true },
     children: [
       {
         path: 'products',
@@ -65,9 +64,6 @@ router.beforeEach(async (to, from, next) => {
       ? next()
       : next({ path: '/login' })
     : next();
-  console.log(data.success);
-
-  console.log(to.meta.requiresAuth, from.meta.requiresAuth);
 });
 
 export default router;

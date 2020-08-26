@@ -1,11 +1,11 @@
 <template>
   <div>
     <div class="d-flex justify-content-end">
-      <button class="btn btn-primary my-3 mr-2" @click="createProduct">
+      <button class="btn btn-primary my-1 mr-2" @click="createProduct">
         建立新的產品
       </button>
     </div>
-    <table class="table p-0 text-center">
+    <table class="table text-center p-0 mb-0">
       <thead>
         <tr>
           <th scope="col" width="100">分類</th>
@@ -20,9 +20,14 @@
         <tr v-for="product in allProducts" :key="product.id">
           <th>{{ product.category }}</th>
           <td>{{ product.title }}</td>
-          <td class="text-right">{{ product.origin_price }}</td>
-          <td class="text-right">{{ product.price }}</td>
-          <td>{{ product.is_enabled ? '啟用' : '未啟用' }}</td>
+          <td class="text-right">
+            {{ product.origin_price | thousands }}
+          </td>
+          <td class="text-right">{{ product.price | thousands }}</td>
+          <td>
+            <span v-if="product.is_enabled" class="text-success">啟用</span>
+            <span v-else class="text-muted">未啟用</span>
+          </td>
           <td>
             <div class="btn-group btn-group-sm" role="group" aria-label="...">
               <button
@@ -37,58 +42,96 @@
                 class="btn btn-outline-secondary"
                 @click="removeProduct(product.id)"
               >
-                刪除
+                <span v-if="removeID !== product.id">刪除</span>
+                <font-awesome-icon
+                  v-else-if="removeID === product.id"
+                  icon="spinner"
+                  class="fa-spin"
+                />
               </button>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
+    <div class="d-flex justify-content-center">
+      <Pagination
+        :pagination="pagination"
+        @getProducts="getProducts"
+      ></Pagination>
+    </div>
     <ProductCard :product="product" @getProducts="getProducts"></ProductCard>
   </div>
 </template>
 
 <script>
 import ProductCard from '@/components/common/ProductCard';
+import Pagination from '@/components/common/Pagination';
 
 export default {
   components: {
-    ProductCard
+    ProductCard,
+    Pagination
   },
   data() {
     return {
       allProducts: [],
-      product: {}
+      pagination: {},
+      product: {},
+      loader: this.$loading,
+      removeID: ''
     };
   },
   created() {
     this.getProducts();
   },
   methods: {
-    async getProducts(resolve) {
-      const api = `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/admin/products/all`;
+    async getProducts(resolve = null, page = 1) {
+      const loader = this.loader.show();
+      const api = `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/admin/products?page=${page}`;
       const { data } = await this.$http.get(api);
-      const { products } = data;
-      this.allProducts = { ...products };
+      const { success } = data;
+      console.log('success: ', success);
+      if (!success) {
+        this.$router.push('/login');
+      }
+      const { products, pagination } = data;
+      this.allProducts = [...products];
+      this.pagination = {
+        ...pagination
+      };
       resolve ? resolve('') : '';
+      loader.hide();
     },
     createProduct() {
       this.product = {};
     },
     editProduct(product) {
-      this.product = { ...product };
+      this.product = {
+        ...product
+      };
     },
     async removeProduct(id) {
+      this.removeID = id;
       const api = `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/admin/product/${id}`;
       await this.$http.delete(api);
       this.getProducts();
     }
   },
+  filters: {
+    thousands(num) {
+      num = '$' + String(num).replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
+      return num;
+    }
+  },
   watch: {
     products() {
-      this.allProducts = { ...this.products };
+      this.allProducts = {
+        ...this.products
+      };
     }
   }
 };
 </script>
+
 <style scope></style>
