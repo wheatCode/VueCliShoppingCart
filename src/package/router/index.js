@@ -8,6 +8,7 @@ import Child3 from '@/components/childs/child3';
 import Login from '@/components/pages/Login';
 import Home from '@/components/pages/Home';
 import Products from '@/components/pages/Products';
+import Order from '@/components/pages/customer/Order';
 
 Vue.use(VueRouter);
 
@@ -26,6 +27,12 @@ const routes = [
         name: 'Products',
         component: Products,
         meta: { requiresAuth: true }
+      },
+      {
+        path: '/order',
+        name: 'Order',
+        component: Order,
+        children: []
       }
     ]
   },
