@@ -24,7 +24,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <img :src="aProduct.image" class="img-fluid my-2" />
+            <img :src="aProduct.image" class="w-100 my-2" />
             <span class="font-weight-bold">課程優惠上線中</span>
             <div class="d-flex justify-content-between align-items-center my-3">
               <span class="small font-weight-bold"
@@ -44,8 +44,9 @@
             <span class="small font-weight-bold text-muted"
               >小計 {{ aProduct.price * aProduct.num }} 元</span
             >
-            <button type="button" class="btn btn-primary" @click="addCart">
-              加到購物車
+            <button type="button" class="btn btn-primary">
+              <span>加到購物車</span>
+              <font-awesome-icon icon="spinner" class="fa-spin" />
             </button>
           </div>
         </div>
