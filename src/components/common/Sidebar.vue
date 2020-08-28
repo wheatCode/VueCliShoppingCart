@@ -48,10 +48,19 @@
           <li class="nav-item">
             <router-link
               class="nav-link"
+              :class="{ active: $route.fullPath === '/customer/product' }"
+              to="/customer/product"
+            >
+              <span>購物畫面</span>
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link
+              class="nav-link"
               :class="{ active: $route.fullPath === '/customer/order' }"
               to="/customer/order"
             >
-              <span>模擬訂單</span>
+              <span>結帳畫面</span>
             </router-link>
           </li>
         </ul>
