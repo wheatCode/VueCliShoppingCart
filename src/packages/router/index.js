@@ -3,9 +3,10 @@ import VueRouter from 'vue-router';
 import axios from 'axios';
 import Login from '@/components/pages/Login';
 import Home from '@/components/pages/admin/Home';
-import Product from '@/components/pages/admin/Product';
+import A_Product from '@/components/pages/admin/Product';
 import A_Order from '@/components/pages/admin/Order';
 import Coupon from '@/components/pages/admin/Coupon';
+import C_Product from '@/components/pages/customer/Product';
 import C_Order from '@/components/pages/customer/Order';
 
 Vue.use(VueRouter);
@@ -23,7 +24,7 @@ const routes = [
       {
         path: 'product',
         name: 'Product',
-        component: Product,
+        component: A_Product,
         meta: { requiresAuth: true }
       },
       {
@@ -42,9 +43,14 @@ const routes = [
   },
   {
     path: '/customer',
-    redirect: '/customer/order',
+    redirect: '/customer/product  ',
     component: Home,
     children: [
+      {
+        path: 'product',
+        name: 'c_product',
+        component: C_Product
+      },
       {
         path: 'order',
         name: 'c_order',
