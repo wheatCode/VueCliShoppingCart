@@ -18,7 +18,7 @@
       <ul class="nav justify-content-end px-3">
         <li
           class="nav-item d-flex align-items-center dropdown"
-          v-if="$route.path === '/customer/order'"
+          v-if="$route.path === '/customer/product'"
           @click="getOrders"
         >
           <a class="nav-link" href="#" id="navbarDropdown" role="button">

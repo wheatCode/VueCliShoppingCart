@@ -44,7 +44,7 @@
             <span class="small font-weight-bold text-muted"
               >小計 {{ aProduct.price * aProduct.num }} 元</span
             >
-            <button type="button" class="btn btn-primary">
+            <button type="button" class="btn btn-primary" @click="addCart">
               <span>加到購物車</span>
               <font-awesome-icon icon="spinner" class="fa-spin" />
             </button>
