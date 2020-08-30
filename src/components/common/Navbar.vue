@@ -85,7 +85,7 @@ export default {
         `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/cart`
       );
       const { carts } = data.data.data;
-      this.orders = { ...carts };
+      this.orders = [...carts];
       this.canShowOrders = false;
     },
     async removeOrder(id) {
