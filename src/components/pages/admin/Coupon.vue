@@ -50,22 +50,25 @@
         </tr>
       </tbody>
     </table>
-    <!-- <div class="d-flex justify-content-center">
-          <Pagination
-            :pagination="pagination"
-            @getProducts="getProducts"
-          ></Pagination>
-        </div> -->
-    <CouponCard :coupon="coupon"></CouponCard>
+    <div class="d-flex justify-content-center fixed-bottom ml-30">
+      <Pagination
+        :pageUrl="'coupon'"
+        :pagination="pagination"
+        @getSomething="getCoupons"
+      ></Pagination>
+    </div>
+    <CouponCard :coupon="coupon" @getCoupons="getCoupons"></CouponCard>
   </div>
 </template>
 
 <script>
-import CouponCard from '@/components/common/CouponCard';
+import CouponCard from '@/components/pages/admin/CouponCard';
+import Pagination from '@/components/common/Pagination';
 
 export default {
   components: {
-    CouponCard
+    CouponCard,
+    Pagination
   },
   created() {
     this.getCoupons();
@@ -73,6 +76,7 @@ export default {
   data() {
     return {
       removeID: '',
+      pagination: {},
       coupon: {},
       allCoupons: []
     };
@@ -82,9 +86,11 @@ export default {
       const loader = this.$loading.show();
       const api = `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/admin/coupons?page=1`;
       const { data } = await this.axios.get(api);
-      const { coupons } = data;
+      const { coupons, pagination } = data;
       this.allCoupons = { ...coupons };
-      console.log(this.allCoupons);
+      this.pagination = {
+        ...pagination
+      };
       loader.hide();
     },
     createCoupon() {
@@ -95,9 +101,8 @@ export default {
     },
     async removeCoupon(id) {
       this.removeID = id;
-      const api = `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/admin/coupons/${id}`;
-      const { data } = await this.axios.delete(api);
-      console.log(data);
+      const api = `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/admin/coupon/${id}`;
+      await this.axios.delete(api);
       this.getCoupons();
     }
   }

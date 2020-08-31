@@ -57,10 +57,14 @@
     <div class="d-flex justify-content-center fixed-bottom ml-30">
       <Pagination
         :pagination="pagination"
-        @getProducts="getProducts"
+        @getSomething="getProducts"
       ></Pagination>
     </div>
-    <ProductCard :product="product" @getProducts="getProducts"></ProductCard>
+    <ProductCard
+      :pageUrl="'product'"
+      :product="product"
+      @getProducts="getProducts"
+    ></ProductCard>
   </div>
 </template>
 
@@ -91,7 +95,6 @@ export default {
       const api = `${process.env.VUE_APP_URL}/api/${
         process.env.VUE_APP_API_PATH
       }/admin/products?page=${page || this.$route.query.page || 1}`;
-      console.log(this.$route.query.page);
       const { data } = await this.$http.get(api);
       const { success } = data;
       !success ? this.$router.push('/login') : '';
@@ -100,7 +103,6 @@ export default {
       this.pagination = {
         ...pagination
       };
-      console.log(this.$route.query.page);
       resolve ? resolve('') : '';
       loader.hide();
     },
