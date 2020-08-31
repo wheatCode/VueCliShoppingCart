@@ -78,6 +78,7 @@ export default {
       allProducts: [],
       pagination: {},
       product: {},
+      loader: this.$loading,
       removeID: ''
     };
   },
@@ -86,10 +87,11 @@ export default {
   },
   methods: {
     async getProducts(resolve = null, page) {
-      const loader = this.$loading.show();
+      const loader = this.loader.show();
       const api = `${process.env.VUE_APP_URL}/api/${
         process.env.VUE_APP_API_PATH
       }/admin/products?page=${page || this.$route.query.page || 1}`;
+      console.log(this.$route.query.page);
       const { data } = await this.$http.get(api);
       const { success } = data;
       !success ? this.$router.push('/login') : '';
@@ -98,6 +100,7 @@ export default {
       this.pagination = {
         ...pagination
       };
+      console.log(this.$route.query.page);
       resolve ? resolve('') : '';
       loader.hide();
     },

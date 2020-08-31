@@ -19,7 +19,7 @@
         <tr v-for="coupon in allCoupons" :key="coupon.id">
           <td>{{ coupon.title }}</td>
           <td>{{ coupon.code }}</td>
-          <td>{{ coupon.percent }}</td>
+          <td>{{ coupon.percent / 10 }}</td>
           <td>
             <span v-if="coupon.is_enabled" class="text-success">啟用</span>
             <span v-else class="text-muted">未啟用</span>
@@ -56,7 +56,7 @@
             @getProducts="getProducts"
           ></Pagination>
         </div> -->
-    <CouponCard :coupon="coupon" @getCoupons="getCoupons"></CouponCard>
+    <CouponCard :coupon="coupon"></CouponCard>
   </div>
 </template>
 
@@ -95,10 +95,9 @@ export default {
     },
     async removeCoupon(id) {
       this.removeID = id;
-      const api = `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/admin/coupon/${id}`;
+      const api = `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/admin/coupons/${id}`;
       const { data } = await this.axios.delete(api);
       console.log(data);
-      this.removeID = '';
       this.getCoupons();
     }
   }
