@@ -54,7 +54,7 @@
         </tr>
       </tbody>
     </table>
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center fixed-bottom ml-30">
       <Pagination
         :pagination="pagination"
         @getProducts="getProducts"
@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import ProductCard from '@/components/common/ProductCard';
+import ProductCard from '@/components/pages/admin/ProductCard';
 import Pagination from '@/components/common/Pagination';
 
 export default {
@@ -127,3 +127,8 @@ export default {
   }
 };
 </script>
+<style lang="scss" scope>
+.ml-30 {
+  margin-left: 200px;
+}
+</style>
