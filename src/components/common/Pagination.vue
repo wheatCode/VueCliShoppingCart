@@ -7,12 +7,12 @@
           :class="{
             disabled: !pagination.has_pre
           }"
-          @click="getProducts(previousPage, !pagination.has_pre)"
+          @click="getSomething(previousPage, !pagination.has_pre)"
         >
           <router-link
             class="page-link"
             :to="{
-              path: '/admin/product',
+              path: `/admin/${pageUrl}`,
               query: { page: `${previousPage}` }
             }"
             aria-label="Previous"
@@ -23,13 +23,14 @@
         </li>
         <li
           class="page-item"
+          :class="{ active: page === currentPage }"
           v-for="page in pagination.total_pages"
           :key="page"
-          @click="getProducts(page)"
+          @click="getSomething(page)"
         >
           <router-link
             class="page-link"
-            :to="{ path: '/admin/product', query: { page: `${page}` } }"
+            :to="{ path: `/admin/${pageUrl}`, query: { page: `${page}` } }"
             >{{ page }}</router-link
           >
         </li>
@@ -38,12 +39,12 @@
           :class="{
             disabled: !pagination.has_next
           }"
-          @click="getProducts(nextPage, !pagination.has_next)"
+          @click="getSomething(nextPage, !pagination.has_next)"
         >
           <router-link
             class="page-link"
             :to="{
-              path: '/admin/product',
+              path: `/admin/${pageUrl}`,
               query: { page: `${nextPage}` }
             }"
             aria-label="Next"
@@ -60,13 +61,25 @@
 <script>
 export default {
   props: {
+    pageUrl: {
+      type: String
+    },
     pagination: {
       type: Object
     }
   },
+  data() {
+    return {
+      currentPage: 1
+    };
+  },
   methods: {
-    getProducts(page, readOnly = false) {
-      readOnly ? '' : this.$emit('getProducts', null, page);
+    getSomething(page, readOnly = false) {
+      if (!readOnly) {
+        if (this.currentPage === page) return;
+        this.currentPage = page;
+        this.$emit('getSomething', null, page);
+      }
     }
   },
   computed: {

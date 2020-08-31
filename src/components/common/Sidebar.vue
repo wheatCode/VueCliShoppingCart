@@ -14,7 +14,7 @@
           <li class="nav-item">
             <router-link
               class="nav-link"
-              :class="{ active: $route.fullPath === '/admin/product' }"
+              :class="{ active: $route.path === '/admin/product' }"
               to="/admin/product"
             >
               <span>產品列標</span>
@@ -23,7 +23,7 @@
           <li class="nav-item">
             <router-link
               class="nav-link"
-              :class="{ active: $route.fullPath === '/admin/order' }"
+              :class="{ active: $route.path === '/admin/order' }"
               to="/admin/order"
             >
               <span>訂單列表</span>
@@ -32,7 +32,7 @@
           <li class="nav-item">
             <router-link
               class="nav-link"
-              :class="{ active: $route.fullPath === '/admin/coupon' }"
+              :class="{ active: $route.path === '/admin/coupon' }"
               to="/admin/coupon"
             >
               <span>優惠券</span>
@@ -48,7 +48,7 @@
           <li class="nav-item">
             <router-link
               class="nav-link"
-              :class="{ active: $route.fullPath === '/customer/product' }"
+              :class="{ active: $route.path === '/customer/product' }"
               to="/customer/product"
             >
               <span>購物畫面</span>
@@ -57,7 +57,7 @@
           <li class="nav-item">
             <router-link
               class="nav-link"
-              :class="{ active: $route.fullPath === '/customer/order' }"
+              :class="{ active: $route.path === '/customer/order' }"
               to="/customer/order"
             >
               <span>結帳畫面</span>

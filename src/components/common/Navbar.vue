@@ -3,7 +3,11 @@
     <nav
       class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow"
     >
-      <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">WHEAT0710</a>
+      <router-link
+        class="navbar-brand col-md-3 col-lg-2 mr-0 px-3"
+        to="/admin/product"
+        >WHEAT0710</router-link
+      >
       <button
         class="navbar-toggler position-absolute d-md-none collapsed"
         type="button"
