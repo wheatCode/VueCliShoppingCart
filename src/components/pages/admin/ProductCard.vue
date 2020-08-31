@@ -10,7 +10,7 @@
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content border-0">
           <div class="modal-header bg-dark text-white">
-            <h5 class="modal-title" id="exampleModalLabel">
+            <h5 class="modal-title" id="productTop">
               <span v-if="!Aproduct.id">新增產品</span>
               <span v-else>修改產品</span>
             </h5>
@@ -31,10 +31,16 @@
                   <input
                     type="text"
                     class="form-control"
+                    :class="{ 'is-invalid': errors.has('圖片網址') }"
                     id="image"
+                    name="圖片網址"
                     placeholder="請輸入圖片連結"
+                    v-validate="'required'"
                     v-model="Aproduct.image"
                   />
+                  <span v-if="errors.has('圖片網址')" class="text-danger">
+                    {{ errors.first('圖片網址') }}</span
+                  >
                 </div>
                 <div class="form-group">
                   <label for="customFile"
@@ -45,14 +51,11 @@
                     type="file"
                     id="customFile"
                     class="form-control"
-                    ref="files"
+                    ref="image"
+                    @change="addImage"
                   />
                 </div>
-                <img
-                  img="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=828346ed697837ce808cae68d3ddc3cf&auto=format&fit=crop&w=1350&q=80"
-                  class="img-fluid"
-                  alt=""
-                />
+                <img :src="Aproduct.image" class="img-fluid" alt="" />
               </div>
               <div class="col-sm-8">
                 <div class="form-group">
@@ -144,6 +147,7 @@
                         }`
                       "
                       :disabled="!Aproduct.origin_price ? true : false"
+                      :required="Aproduct.origin_price ? true : false"
                     />
                     <span
                       v-if="Aproduct.origin_price ? errors.has('售價') : false"
@@ -167,11 +171,7 @@
                     name="產品描述"
                     placeholder="請輸入產品描述"
                     v-model="Aproduct.description"
-                    v-validate="'required'"
                   ></textarea>
-                  <span v-if="errors.has('產品描述')" class="text-danger">{{
-                    errors.first('產品描述')
-                  }}</span>
                 </div>
                 <div class="form-group">
                   <label for="content">說明內容</label>
@@ -183,11 +183,7 @@
                     name="說明內容"
                     placeholder="請輸入產品說明內容"
                     v-model="Aproduct.content"
-                    v-validate="'required'"
                   ></textarea>
-                  <span v-if="errors.has('說明內容')" class="text-danger">{{
-                    errors.first('說明內容')
-                  }}</span>
                 </div>
                 <div class="form-group">
                   <div class="form-check">
@@ -299,14 +295,21 @@ export default {
     },
     async submitProduct(id) {
       this.isSubmit = true;
-      const api = `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/admin/product`;
-      if (id) {
-        await this.editProduct(api, id);
-      } else {
-        await this.createProduct(api);
-      }
-      new Promise(resolve => this.$emit('getProducts', resolve));
-      this.toggleCard(false);
+      const vm = this;
+      await this.$validator.validate().then(async result => {
+        if (result) {
+          const api = `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/admin/product`;
+          if (id) {
+            await vm.editProduct(api, id);
+          } else {
+            await vm.createProduct(api);
+          }
+          new Promise(resolve => vm.$emit('getProducts', resolve));
+          this.toggleCard(false);
+        } else {
+          document.getElementById('productTop').scrollIntoView();
+        }
+      });
       this.isSubmit = false;
     },
     async createProduct(api) {
@@ -316,6 +319,16 @@ export default {
       await this.$http.put(api + `/${id}`, {
         data: this.Aproduct
       });
+    },
+    async addImage() {
+      const image = this.$refs.image.files[0];
+      const imageFormData = new FormData();
+      imageFormData.append('image', image);
+      const api = `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/admin/upload`;
+      const data = await this.axios.post(api, imageFormData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      this.Aproduct.image = data.data.imageUrl;
     }
   },
   watch: {
