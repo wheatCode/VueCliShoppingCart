@@ -60,7 +60,7 @@
               :class="{ active: $route.path === '/customer/order' }"
               to="/customer/order"
             >
-              <span>結帳畫面</span>
+              <span>訂單畫面</span>
             </router-link>
           </li>
         </ul>

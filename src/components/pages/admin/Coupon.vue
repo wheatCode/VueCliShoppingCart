@@ -11,7 +11,6 @@
           <th scope="col" width="120">優惠券名稱</th>
           <th scope="col">優惠碼</th>
           <th scope="col" width="120">幾折</th>
-          <th scope="col" width="120">是否啟用</th>
           <th scope="col" width="120">編輯</th>
         </tr>
       </thead>
@@ -20,10 +19,6 @@
           <td>{{ coupon.title }}</td>
           <td>{{ coupon.code }}</td>
           <td>{{ coupon.percent / 10 }}</td>
-          <td>
-            <span v-if="coupon.is_enabled" class="text-success">啟用</span>
-            <span v-else class="text-muted">未啟用</span>
-          </td>
           <td>
             <div class="btn-group btn-group-sm" role="group" aria-label="...">
               <button
@@ -50,13 +45,11 @@
         </tr>
       </tbody>
     </table>
-    <div class="d-flex justify-content-center fixed-bottom ml-30">
-      <Pagination
-        :pageUrl="'coupon'"
-        :pagination="pagination"
-        @getSomething="getCoupons"
-      ></Pagination>
-    </div>
+    <Pagination
+      :pageUrl="'/admin/coupon'"
+      :pagination="pagination"
+      @getSomething="getCoupons"
+    ></Pagination>
     <CouponCard :coupon="coupon" @getCoupons="getCoupons"></CouponCard>
   </div>
 </template>
@@ -82,15 +75,16 @@ export default {
     };
   },
   methods: {
-    async getCoupons() {
+    async getCoupons(page = 1, resolve = null) {
       const loader = this.$loading.show();
-      const api = `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/admin/coupons?page=1`;
+      const api = `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/admin/coupons?page=${page}`;
       const { data } = await this.axios.get(api);
       const { coupons, pagination } = data;
       this.allCoupons = { ...coupons };
       this.pagination = {
         ...pagination
       };
+      resolve ? resolve('') : '';
       loader.hide();
     },
     createCoupon() {

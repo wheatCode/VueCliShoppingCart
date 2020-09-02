@@ -44,8 +44,12 @@
                 </div>
                 <div class="form-group">
                   <label for="customFile"
-                    >或 上傳圖片
-                    <i class="fas fa-spinner fa-spin"></i>
+                    ><span> 或 上傳圖片</span>
+                    <font-awesome-icon
+                      v-if="canUpload"
+                      icon="spinner"
+                      class="fa-spin"
+                    />
                   </label>
                   <input
                     type="file"
@@ -185,19 +189,6 @@
                     v-model="Aproduct.content"
                   ></textarea>
                 </div>
-                <div class="form-group">
-                  <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      id="is_enabled"
-                      v-model="Aproduct.is_enabled"
-                    />
-                    <label class="form-check-label" for="is_enabled">
-                      是否啟用
-                    </label>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -225,47 +216,6 @@
         </div>
       </div>
     </div>
-    <div
-      class="modal fade"
-      id="delProductModal"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="exampleModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog" role="document">
-        <div class="modal-content border-0">
-          <div class="modal-header bg-danger text-white">
-            <h5 class="modal-title" id="exampleModalLabel">
-              <span>刪除產品</span>
-            </h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            是否刪除
-            <strong class="text-danger"></strong>
-            商品(刪除後將無法恢復)。
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-outline-secondary"
-              data-dismiss="modal"
-            >
-              取消
-            </button>
-            <button type="button" class="btn btn-danger">確認刪除</button>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -282,9 +232,10 @@ export default {
   components: {},
   data() {
     return {
-      Aproduct: {},
+      canUpload: false,
       isLoading: false,
-      isSubmit: false
+      isSubmit: false,
+      Aproduct: {}
     };
   },
   methods: {
@@ -304,7 +255,9 @@ export default {
           } else {
             await vm.createProduct(api);
           }
-          new Promise(resolve => vm.$emit('getProducts', resolve));
+          new Promise(resolve =>
+            vm.$emit('getProducts', this.$route.query.page, resolve)
+          );
           this.toggleCard(false);
         } else {
           document.getElementById('productTop').scrollIntoView();
@@ -321,6 +274,7 @@ export default {
       });
     },
     async addImage() {
+      this.canUpload = true;
       const image = this.$refs.image.files[0];
       const imageFormData = new FormData();
       imageFormData.append('image', image);
@@ -329,6 +283,7 @@ export default {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       this.Aproduct.image = data.data.imageUrl;
+      this.canUpload = false;
     }
   },
   watch: {

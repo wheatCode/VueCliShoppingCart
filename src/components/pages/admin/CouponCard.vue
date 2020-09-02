@@ -72,15 +72,6 @@
                 {{ errors.first('優惠碼') }}</span
               >
             </div>
-            <div class="form-check">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                id="enable"
-                v-model="aCoupon.is_enabled"
-              />
-              <label class="form-check-label" for="enable">是否啟用</label>
-            </div>
           </div>
           <div class="modal-footer" style="position: relative">
             <button
@@ -152,7 +143,9 @@ export default {
           } else {
             await this.createCoupon(api);
           }
-          new Promise(resolve => this.$emit('getCoupons', resolve));
+          new Promise(resolve =>
+            this.$emit('getCoupons', this.$route.query.page, resolve)
+          );
           this.toggleCard(false);
         } else {
           document.getElementById('couponTop').scrollIntoView();

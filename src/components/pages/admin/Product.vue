@@ -12,7 +12,6 @@
           <th scope="col">商品名稱</th>
           <th scope="col" width="120">原價</th>
           <th scope="col" width="120">售價</th>
-          <th scope="col" width="100">是否啟用</th>
           <th scope="col" width="120">編輯</th>
         </tr>
       </thead>
@@ -24,10 +23,6 @@
             {{ product.origin_price | thousands }}
           </td>
           <td class="text-right">{{ product.price | thousands }}</td>
-          <td>
-            <span v-if="product.is_enabled" class="text-success">啟用</span>
-            <span v-else class="text-muted">未啟用</span>
-          </td>
           <td>
             <div class="btn-group btn-group-sm" role="group" aria-label="...">
               <button
@@ -54,17 +49,12 @@
         </tr>
       </tbody>
     </table>
-    <div class="d-flex justify-content-center fixed-bottom ml-30">
-      <Pagination
-        :pagination="pagination"
-        @getSomething="getProducts"
-      ></Pagination>
-    </div>
-    <ProductCard
-      :pageUrl="'product'"
-      :product="product"
-      @getProducts="getProducts"
-    ></ProductCard>
+    <Pagination
+      :pageUrl="'/admin/product'"
+      :pagination="pagination"
+      @getSomething="getProducts"
+    ></Pagination>
+    <ProductCard :product="product" @getProducts="getProducts"></ProductCard>
   </div>
 </template>
 
@@ -82,7 +72,6 @@ export default {
       allProducts: [],
       pagination: {},
       product: {},
-      loader: this.$loading,
       removeID: ''
     };
   },
@@ -90,11 +79,9 @@ export default {
     this.getProducts();
   },
   methods: {
-    async getProducts(resolve = null, page) {
-      const loader = this.loader.show();
-      const api = `${process.env.VUE_APP_URL}/api/${
-        process.env.VUE_APP_API_PATH
-      }/admin/products?page=${page || this.$route.query.page || 1}`;
+    async getProducts(page = 1, resolve = null) {
+      const loader = this.$loading.show();
+      const api = `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/admin/products?page=${page}`;
       const { data } = await this.$http.get(api);
       const { success } = data;
       !success ? this.$router.push('/login') : '';

@@ -45,8 +45,8 @@
               >小計 {{ aProduct.price * aProduct.num }} 元</span
             >
             <button type="button" class="btn btn-primary" @click="addCart">
-              <span>加到購物車</span>
-              <font-awesome-icon icon="spinner" class="fa-spin" />
+              <span v-if="!canAddCart">加到購物車</span>
+              <font-awesome-icon v-else icon="spinner" class="fa-spin" />
             </button>
           </div>
         </div>
@@ -66,6 +66,7 @@ export default {
   },
   data() {
     return {
+      canAddCart: false,
       aProduct: {}
     };
   },
@@ -76,16 +77,17 @@ export default {
         : $('#productCard').modal('hide');
     },
     async addCart() {
+      this.canAddCart = true;
       await new Promise(resolve =>
         this.$emit('addCart', this.aProduct.id, this.aProduct.num, resolve)
       );
+      this.canAddCart = false;
       this.toggleCart(false);
     }
   },
   watch: {
     product() {
       this.aProduct = { ...this.product, num: 1 };
-      console.log(this.aProduct);
       this.toggleCart(true);
     }
   }

@@ -1,7 +1,7 @@
 <template>
   <div>
     <nav aria-label="Page navigation example">
-      <ul class="pagination">
+      <ul class="pagination justify-content-center">
         <li
           class="page-item"
           :class="{
@@ -12,7 +12,7 @@
           <router-link
             class="page-link"
             :to="{
-              path: `/admin/${pageUrl}`,
+              path: `${pageUrl}`,
               query: { page: `${previousPage}` }
             }"
             aria-label="Previous"
@@ -30,7 +30,7 @@
         >
           <router-link
             class="page-link"
-            :to="{ path: `/admin/${pageUrl}`, query: { page: `${page}` } }"
+            :to="{ path: `${pageUrl}`, query: { page: `${page}` } }"
             >{{ page }}</router-link
           >
         </li>
@@ -44,7 +44,7 @@
           <router-link
             class="page-link"
             :to="{
-              path: `/admin/${pageUrl}`,
+              path: `${pageUrl}`,
               query: { page: `${nextPage}` }
             }"
             aria-label="Next"
@@ -78,7 +78,7 @@ export default {
       if (!readOnly) {
         if (this.currentPage === page) return;
         this.currentPage = page;
-        this.$emit('getSomething', null, page);
+        this.$emit('getSomething', page);
       }
     }
   },

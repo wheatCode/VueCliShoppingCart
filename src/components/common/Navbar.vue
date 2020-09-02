@@ -25,36 +25,51 @@
           v-if="$route.path === '/customer/product'"
           @click="getOrders"
         >
-          <a class="nav-link" href="#" id="navbarDropdown" role="button">
-            <font-awesome-icon
-              :icon="['fa', 'shopping-cart']"
-              class="text-white"
-            />
-          </a>
-          <div
-            class="dropdown-menu  dropdown-menu-right"
-            aria-labelledby="navbarDropdown"
-            id="orderMenu"
-          >
-            <div class="d-flex justify-content-center h3" v-if="canShowOrders">
-              <font-awesome-icon icon="spinner" class="fa-spin" />
-            </div>
-            <div
-              class="dropdown-item font-weight-bold"
-              v-for="order in orders"
-              v-else
-              :key="order.id"
+          <div class="dropdown" id="showShoppingCart">
+            <button
+              type="button"
+              class="btn btn-dark"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
             >
-              {{ order.product.title }}
-              <span class="text-danger">{{ order.qty }}</span> 個 總共
-              <span class="text-danger"> {{ order.total }}</span>
-              元
-              <button class="btn btn-link" @click="removeOrder(order.id)">
-                <font-awesome-icon
-                  class="text-dark"
-                  :icon="['fa', 'trash-alt']"
-                />
-              </button>
+              <font-awesome-icon
+                :icon="['fa', 'shopping-cart']"
+                class="text-white"
+              />
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+              <div
+                class="dropdown-item font-weight-bold"
+                v-if="orders.length === 0 && !canShowOrders"
+              >
+                尚無商品
+              </div>
+              <div
+                class="d-flex justify-content-center h3"
+                v-if="canShowOrders"
+              >
+                <font-awesome-icon icon="spinner" class="fa-spin" />
+              </div>
+              <div
+                class="dropdown-item font-weight-bold d-flex justify-content-between align-items-center pl-2 pr-0"
+                v-for="order in orders"
+                v-else
+                @click.stop
+                :key="order.id"
+              >
+                <span>{{ order.product.title }}</span>
+                <span class="text-danger ml-2 mr-1">{{ order.qty }}</span> 個
+                總共
+                <span class="text-danger mx-2">{{ order.total }}</span>
+                元
+                <button class="btn btn-link" @click="removeOrder(order.id)">
+                  <font-awesome-icon
+                    class="text-dark"
+                    :icon="['fa', 'trash-alt']"
+                  />
+                </button>
+              </div>
             </div>
           </div>
         </li>
@@ -78,26 +93,36 @@ export default {
       orders: []
     };
   },
+  created() {},
   methods: {
     logout() {
       this.$emit('logout');
     },
     async getOrders() {
-      this.canShowOrders = true;
-      $('#orderMenu').dropdown('toggle');
-      const data = await this.axios.get(
+      const vm = this;
+      await $('#showShoppingCart').on('show.bs.dropdown', async function() {
+        vm.canShowOrders = true;
+        const data = await vm.axios.get(
+          `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/cart`
+        );
+        const { carts } = data.data.data;
+        vm.orders = [...carts];
+        vm.canShowOrders = false;
+      });
+      vm.canShowOrders = true;
+      const data = await vm.axios.get(
         `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/cart`
       );
       const { carts } = data.data.data;
-      this.orders = [...carts];
-      this.canShowOrders = false;
+      vm.orders = [...carts];
+      vm.canShowOrders = false;
     },
     async removeOrder(id) {
       this.canShowOrders = true;
       await this.axios.delete(
         `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/cart/${id}`
       );
-      this.getOrders();
+      await this.getOrders();
       this.canShowOrders = false;
     }
   }
