@@ -20,7 +20,11 @@
                   class="btn btn-outline-danger btn-sm"
                   @click="removeOrder(order.id)"
                 >
-                  <font-awesome-icon :icon="['fa', 'trash-alt']" />
+                  <font-awesome-icon
+                    v-if="!canRemoveProduct"
+                    :icon="['fa', 'trash-alt']"
+                  />
+                  <font-awesome-icon v-else icon="spinner" class="fa-spin" />
                 </button>
               </td>
               <td class="align-middle">
@@ -163,6 +167,7 @@ export default {
       code: '',
       total: 0,
       final_total: 0,
+      canRemoveProduct: false,
       orders: [],
       user: {}
     };
@@ -193,25 +198,28 @@ export default {
         const { final_total } = data.data;
         this.final_total = final_total;
       } else {
-        console.log('沒有優惠馬');
+        this.$bus.$emit('showSnackbar', true, '#D32F2F', 5000, '沒有優惠碼');
       }
       this.code = '';
       this.getOrders();
     },
     async submitOrder() {
       const vm = this;
-      const data = await this.axios.post(
+      await this.axios.post(
         `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/order`,
         { data: { user: vm.user } }
       );
+      this.$bus.$emit('showSnackbar', true, '#81C784', 5000, '訂單建立');
       this.getOrders();
       this.user = {};
-      console.log(data);
     },
     async removeOrder(id) {
+      this.canRemoveProduct = true;
       await this.axios.delete(
         `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/cart/${id}`
       );
+      this.$bus.$emit('showSnackbar', true, '#D32F2F', 5000, '刪除成功');
+      this.canRemoveProduct = false;
       this.getOrders();
     }
   },

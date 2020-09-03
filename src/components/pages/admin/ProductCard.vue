@@ -271,6 +271,13 @@ export default {
           document.getElementById('productTop').scrollIntoView();
         }
       });
+      this.$bus.$emit(
+        'showSnackbar',
+        true,
+        '#81C784',
+        5000,
+        this.Aproduct.id ? '修改成功' : '建立成功'
+      );
       this.isSubmit = false;
     },
     async createProduct(api) {

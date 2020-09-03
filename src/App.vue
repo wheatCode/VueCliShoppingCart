@@ -1,11 +1,17 @@
 <template>
   <div id="app">
     <router-view></router-view>
+    <Snackbar></Snackbar>
   </div>
 </template>
 
 <script>
+import Snackbar from '@/components/common/Snackbar';
+
 export default {
+  components: {
+    Snackbar
+  },
   async created() {},
   methods: {
     gotoIntroduce() {

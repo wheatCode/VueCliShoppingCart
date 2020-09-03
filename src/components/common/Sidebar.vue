@@ -17,7 +17,7 @@
               :class="{ active: $route.path === '/admin/product' }"
               to="/admin/product"
             >
-              <span>產品列標</span>
+              <span>產品列表</span>
             </router-link>
           </li>
           <li class="nav-item">

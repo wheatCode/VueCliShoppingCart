@@ -105,6 +105,7 @@ export default {
       this.removeID = id;
       const api = `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/admin/product/${id}`;
       await this.$http.delete(api);
+      this.$bus.$emit('showSnackbar', true, '#D32F2F', 5000, '已刪除');
       this.getProducts();
     }
   },

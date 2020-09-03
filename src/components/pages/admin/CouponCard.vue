@@ -150,21 +150,37 @@ export default {
         } else {
           document.getElementById('couponTop').scrollIntoView();
         }
+        this.$bus.$emit(
+          'showSnackbar',
+          true,
+          '#81C784',
+          5000,
+          this.aCoupon.id ? '修改成功' : '建立成功'
+        );
         this.isSubmit = false;
       });
     },
     async createCoupon(api) {
-      await this.$http.post(api, { data: this.aCoupon });
+      const vm = this;
+      await this.$http.post(api, {
+        data: { ...vm.aCoupon, percent: vm.aCoupon.percent * 10 }
+      });
     },
     async editCoupon(api, id) {
+      const vm = this;
       await this.$http.put(api + `/${id}`, {
-        data: this.aCoupon
+        data: { ...vm.aCoupon, percent: vm.aCoupon.percent * 10 }
       });
     }
   },
   watch: {
     coupon() {
-      this.aCoupon = { ...this.coupon };
+      if (this.aCoupon.id) {
+        this.aCoupon = { ...this.coupon, percent: this.coupon.percent / 10 };
+      } else {
+        this.aCoupon = { ...this.coupon };
+      }
+
       this.errors.clear();
       this.toggleCard(true);
     }

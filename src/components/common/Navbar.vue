@@ -123,6 +123,7 @@ export default {
         `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/cart/${id}`
       );
       await this.getOrders();
+      this.$bus.$emit('showSnackbar', true, '#D32F2F', 5000, '刪除成功');
       this.canShowOrders = false;
     }
   }

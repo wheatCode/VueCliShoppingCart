@@ -81,6 +81,7 @@ export default {
       await new Promise(resolve =>
         this.$emit('addCart', this.aProduct.id, this.aProduct.num, resolve)
       );
+      this.$bus.$emit('showSnackbar', true, '#81C784', 5000, '已加入購物車');
       this.canAddCart = false;
       this.toggleCart(false);
     }

@@ -1,5 +1,5 @@
 <template>
-  <div class="row align-items-center mt">
+  <div class="row align-items-center mt-3">
     <form class="form-signin" @submit.prevent="login">
       <h1 class="h3 mb-3 font-weight-normal text-center">登入後台</h1>
       <label for="inputEmail" class="sr-only">Email address</label>
@@ -22,7 +22,7 @@
         required
       />
       <button class="btn btn-lg btn-primary btn-block " type="submit">
-        <span v-if="canLogin === false">登入</span>
+        <span class="text-white" v-if="canLogin === false">登入</span>
         <font-awesome-icon
           v-else-if="canLogin === true"
           icon="spinner"
@@ -57,8 +57,10 @@ export default {
       const vm = this;
       const { data } = await this.$http.post(api, vm.user);
       if (data.success) {
+        this.$bus.$emit('showSnackbar', true, '#81C784', 5000, '登入成功');
         this.$router.push('/admin/product');
       } else {
+        this.$bus.$emit('showSnackbar', true, '#D32F2F', 5000, '登入失敗');
         this.error = '帳號或密碼錯誤';
       }
       this.canLogin = false;

@@ -111,6 +111,7 @@ export default {
       const api = `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/cart`;
       await this.$http.post(api, { data: productData });
       resolve ? resolve('') : '';
+      this.$bus.$emit('showSnackbar', true, '#81C784', 5000, '已加入購物車');
       this.canAddCart = false;
       this.addCartId = null;
     }

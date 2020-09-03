@@ -7,7 +7,6 @@
           <th scope="col">購買人</th>
           <th scope="col">是否付款</th>
           <th scope="col">總共金額</th>
-          <th scope="col">編輯</th>
         </tr>
       </thead>
       <tbody>
@@ -19,13 +18,6 @@
             <span v-else class="text-muted">未付款</span>
           </td>
           <td>{{ order.total }}</td>
-          <td>
-            <div class="btn-group btn-group-sm" role="group" aria-label="...">
-              <button type="button" class="btn btn-outline-primary">
-                編輯
-              </button>
-            </div>
-          </td>
         </tr>
       </tbody>
     </table>
