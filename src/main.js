@@ -7,11 +7,13 @@ import './packages/axios';
 import './packages/vueLoadingOverlay';
 import './packages/fontawesome/';
 import './packages/eventbus';
+import vuetify from './plugins/vuetify';
 
 Vue.config.productionTip = false;
 
 new Vue({
   router,
   I18n,
+  vuetify,
   render: h => h(App)
 }).$mount('#app');
