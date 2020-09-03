@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="row justify-content-around">
-      <div class="col-5">
+      <div class="col-md-5">
         <table class="table">
           <thead>
             <th></th>
@@ -68,7 +68,7 @@
           </div>
         </div>
       </div>
-      <form class="col-5" @submit.prevent="submitOrder">
+      <form class="col-md-5" @submit.prevent="submitOrder">
         <div class="form-group">
           <label for="useremail">Email</label>
           <input
@@ -153,7 +153,14 @@
           ></textarea>
         </div>
         <div class="text-right">
-          <button class="btn btn-danger">送出訂單</button>
+          <button class="btn btn-danger">
+            <span v-if="isSubmit === false">送出訂單</span>
+            <font-awesome-icon
+              v-else-if="isSubmit === true"
+              icon="spinner"
+              class="fa-spin"
+            />
+          </button>
         </div>
       </form>
     </div>
@@ -168,6 +175,7 @@ export default {
       total: 0,
       final_total: 0,
       canRemoveProduct: false,
+      isSubmit: false,
       orders: [],
       user: {}
     };
@@ -177,7 +185,7 @@ export default {
   },
   methods: {
     async getOrders() {
-      const loading = this.$loading.show();
+      this.$bus.$emit('showLoading', true);
       const data = await this.axios.get(
         `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/cart`
       );
@@ -185,7 +193,7 @@ export default {
       this.orders = [...carts];
       this.total = total;
       this.final_total = final_total;
-      loading.hide();
+      this.$bus.$emit('showLoading', false);
     },
     async useCoupon() {
       const vm = this;
@@ -193,17 +201,32 @@ export default {
         `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/coupon`,
         { data: { code: vm.code } }
       );
-      const { success } = data;
+      const { success } = data.data;
+      console.log(success);
       if (success) {
         const { final_total } = data.data;
         this.final_total = final_total;
+        this.$bus.$emit(
+          'showSnackbar',
+          true,
+          '#81C784',
+          5000,
+          data.data.message
+        );
       } else {
-        this.$bus.$emit('showSnackbar', true, '#D32F2F', 5000, '沒有優惠碼');
+        this.$bus.$emit(
+          'showSnackbar',
+          true,
+          '#D32F2F',
+          5000,
+          data.data.message
+        );
       }
       this.code = '';
       this.getOrders();
     },
     async submitOrder() {
+      this.isSubmit = true;
       const vm = this;
       await this.axios.post(
         `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/order`,
@@ -212,6 +235,8 @@ export default {
       this.$bus.$emit('showSnackbar', true, '#81C784', 5000, '訂單建立');
       this.getOrders();
       this.user = {};
+      this.isSubmit = false;
+      this.$router.push({ path: '/admin/order' });
     },
     async removeOrder(id) {
       this.canRemoveProduct = true;

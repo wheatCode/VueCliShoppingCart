@@ -88,13 +88,13 @@ export default {
   },
   methods: {
     async getProducts(page = 1) {
-      const loader = this.$loading.show();
+      this.$bus.$emit('showLoading', true);
       const api = `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/products?page=${page}`;
       const { data } = await this.$http.get(api);
       const { products, pagination } = data;
       this.products = [...products];
       this.pagination = { ...pagination };
-      loader.hide();
+      this.$bus.$emit('showLoading', false);
     },
     async getProduct(id) {
       this.productId = id;

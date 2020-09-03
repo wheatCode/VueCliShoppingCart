@@ -9,7 +9,7 @@
       <thead>
         <tr>
           <th scope="col" width="100">分類</th>
-          <th scope="col">商品名稱</th>
+          <th scope="col" width="200">商品名稱</th>
           <th scope="col" width="120">原價</th>
           <th scope="col" width="120">售價</th>
           <th scope="col" width="120">編輯</th>
@@ -80,7 +80,7 @@ export default {
   },
   methods: {
     async getProducts(page = 1, resolve = null) {
-      const loader = this.$loading.show();
+      this.$bus.$emit('showLoading', true);
       const api = `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/admin/products?page=${page}`;
       const { data } = await this.$http.get(api);
       const { success } = data;
@@ -91,7 +91,7 @@ export default {
         ...pagination
       };
       resolve ? resolve('') : '';
-      loader.hide();
+      this.$bus.$emit('showLoading', false);
     },
     createProduct() {
       this.product = {};

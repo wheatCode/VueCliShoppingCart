@@ -38,7 +38,7 @@
                 class="text-white"
               />
             </button>
-            <div class="dropdown-menu dropdown-menu-right">
+            <div class="dropdown-menu dropdown-menu-right mb-0 pb-0">
               <div
                 class="dropdown-item font-weight-bold"
                 v-if="orders.length === 0 && !canShowOrders"
@@ -69,6 +69,17 @@
                     :icon="['fa', 'trash-alt']"
                   />
                 </button>
+              </div>
+              <div
+                class="dropdown-item font-weight-bold d-flex align-items-center px-0 pb-0"
+              >
+                <router-link
+                  class="btn btn-primary btn-block rounded-0"
+                  v-if="orders.length !== 0"
+                  to="/customer/order"
+                >
+                  確定購買
+                </router-link>
               </div>
             </div>
           </div>

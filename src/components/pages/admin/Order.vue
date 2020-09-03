@@ -12,7 +12,7 @@
       <tbody>
         <tr v-for="order in orders" :key="order.id">
           <td>{{ order.num }}</td>
-          <td v-text="order.user.name"></td>
+          <td>{{ order.user ? order.user.name : '無名氏' }}</td>
           <td>
             <span v-if="order.is_paid" class="text-success">已付款</span>
             <span v-else class="text-muted">未付款</span>
@@ -36,7 +36,7 @@ export default {
   components: {
     Pagination
   },
-  async created() {
+  created() {
     this.getOrders();
   },
   data() {
@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     async getOrders(page = 1) {
-      const loader = this.$loading.show();
+      this.$bus.$emit('showLoading', true);
       const api = `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/admin/orders?page=${page}`;
       const { data } = await this.axios.get(api);
       const { orders, pagination } = data;
@@ -56,7 +56,8 @@ export default {
       this.pagination = {
         ...pagination
       };
-      loader.hide();
+      console.log(this.orders);
+      this.$bus.$emit('showLoading', false);
     }
   }
 };

@@ -9,7 +9,7 @@
       <thead>
         <tr>
           <th scope="col" width="120">優惠券名稱</th>
-          <th scope="col">優惠碼</th>
+          <th scope="col" width="200">優惠碼</th>
           <th scope="col" width="120">幾折</th>
           <th scope="col" width="120">編輯</th>
         </tr>
@@ -76,7 +76,7 @@ export default {
   },
   methods: {
     async getCoupons(page = 1, resolve = null) {
-      const loader = this.$loading.show();
+      this.$bus.$emit('showLoading', true);
       const api = `${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_API_PATH}/admin/coupons?page=${page}`;
       const { data } = await this.axios.get(api);
       const { coupons, pagination } = data;
@@ -85,7 +85,7 @@ export default {
         ...pagination
       };
       resolve ? resolve('') : '';
-      loader.hide();
+      this.$bus.$emit('showLoading', false);
     },
     createCoupon() {
       this.coupon = {};

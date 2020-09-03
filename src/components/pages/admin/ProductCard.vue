@@ -31,14 +31,19 @@
                   <input
                     type="text"
                     class="form-control"
-                    :class="{ 'is-invalid': errors.has('圖片網址') }"
+                    :class="{
+                      'is-invalid': !Aproduct.image && errors.has('圖片網址')
+                    }"
                     id="image"
                     name="圖片網址"
                     placeholder="請輸入圖片連結"
                     v-validate="'required'"
                     v-model="Aproduct.image"
                   />
-                  <span v-if="errors.has('圖片網址')" class="text-danger">
+                  <span
+                    v-if="!Aproduct.image && errors.has('圖片網址')"
+                    class="text-danger"
+                  >
                     {{ errors.first('圖片網址') }}</span
                   >
                 </div>
@@ -57,7 +62,7 @@
                     class="form-control"
                     :class="{ 'is-invalid': errors.has('上傳圖片') }"
                     name="上傳圖片"
-                    v-validate="'image|size:100'"
+                    v-validate="'image|size:1000'"
                     ref="image"
                     @change="addImage"
                   />

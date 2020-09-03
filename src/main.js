@@ -5,7 +5,6 @@ import I18n from './plugins/veevalidate';
 import vuetify from './plugins/vuetify';
 import './plugins/bootstrap';
 import './plugins/axios';
-import './plugins/vueLoadingOverlay';
 import './plugins/fontawesome';
 import './plugins/eventbus';
 

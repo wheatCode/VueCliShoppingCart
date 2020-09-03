@@ -175,7 +175,8 @@ export default {
   },
   watch: {
     coupon() {
-      if (this.aCoupon.id) {
+      console.log(1);
+      if (this.coupon.id) {
         this.aCoupon = { ...this.coupon, percent: this.coupon.percent / 10 };
       } else {
         this.aCoupon = { ...this.coupon };

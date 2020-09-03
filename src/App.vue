@@ -2,15 +2,17 @@
   <div id="app">
     <router-view></router-view>
     <Snackbar></Snackbar>
+    <Loading></Loading>
   </div>
 </template>
 
 <script>
 import Snackbar from '@/components/common/Snackbar';
-
+import Loading from '@/components/common/Loading';
 export default {
   components: {
-    Snackbar
+    Snackbar,
+    Loading
   },
   async created() {},
   methods: {
