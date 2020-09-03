@@ -53,12 +53,18 @@
                   </label>
                   <input
                     type="file"
-                    id="customFile"
+                    id="uploadImage"
                     class="form-control"
+                    :class="{ 'is-invalid': errors.has('上傳圖片') }"
+                    name="上傳圖片"
+                    v-validate="'image|size:100'"
                     ref="image"
                     @change="addImage"
                   />
                 </div>
+                <span v-if="errors.has('上傳圖片')" class="text-danger">
+                  {{ errors.first('上傳圖片') }}</span
+                >
                 <img :src="Aproduct.image" class="img-fluid" alt="" />
               </div>
               <div class="col-sm-8">
@@ -246,6 +252,8 @@ export default {
     },
     async submitProduct(id) {
       this.isSubmit = true;
+      const obj = document.getElementById('uploadImage');
+      obj.value = '';
       const vm = this;
       await this.$validator.validate().then(async result => {
         if (result) {

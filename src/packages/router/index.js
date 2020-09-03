@@ -14,7 +14,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '*',
-    redirect: '/admin/product'
+    redirect: '/login'
   },
   {
     path: '/admin',
@@ -70,14 +70,13 @@ const router = new VueRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  const api = `${process.env.VUE_APP_URL}/api/user/check`;
-  const { data } = await axios.post(api);
-
-  to.meta.requiresAuth
-    ? data.success
-      ? next()
-      : next({ path: '/login' })
-    : next();
+  if (to.meta.requiresAuth) {
+    const api = `${process.env.VUE_APP_URL}/api/user/check`;
+    const { data } = await axios.post(api);
+    data.success ? next() : next({ path: '/login' });
+  } else {
+    next();
+  }
 });
 
 export default router;

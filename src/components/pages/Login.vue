@@ -30,6 +30,10 @@
         />
       </button>
       <span class="text-danger">{{ error }}</span>
+      <div>
+        <span class="text-primary">試用信箱:wheat0710@gmail.com</span><br />
+        <span class="text-primary">試用密碼:wheat0710</span>
+      </div>
     </form>
   </div>
 </template>
@@ -52,9 +56,8 @@ export default {
       const api = `${process.env.VUE_APP_URL}/admin/signin`;
       const vm = this;
       const { data } = await this.$http.post(api, vm.user);
-
       if (data.success) {
-        this.$router.push('/products');
+        this.$router.push('/admin/product');
       } else {
         this.error = '帳號或密碼錯誤';
       }
