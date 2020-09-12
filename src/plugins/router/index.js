@@ -14,7 +14,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '*',
-    redirect: '/login'
+    redirect: '/customer/product'
   },
   {
     path: '/admin',
@@ -43,7 +43,7 @@ const routes = [
   },
   {
     path: '/customer',
-    redirect: '/customer/product  ',
+    redirect: '/customer/product',
     component: Home,
     children: [
       {

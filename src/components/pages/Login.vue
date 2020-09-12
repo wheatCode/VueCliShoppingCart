@@ -1,7 +1,7 @@
 <template>
   <div class="row align-items-center mt-3">
     <form class="form-signin" @submit.prevent="login">
-      <h1 class="h3 mb-3 font-weight-normal text-center">登入後台</h1>
+      <h1 class="h3 mb-3 font-weight-normal text-center">登入管理員</h1>
       <label for="inputEmail" class="sr-only">Email address</label>
       <input
         type="email"
@@ -33,6 +33,9 @@
       <div>
         <span class="text-primary">試用信箱:wheat0710@gmail.com</span><br />
         <span class="text-primary">試用密碼:wheat0710</span>
+        <p>由於 Google Chrome 在後續 80 版本後會預設封鎖第三方 Cookie，就會出現無法登入的問題，如果遇到登入後，跳回到登入畫面，請重新開啟網頁點連結。 相關解決方式：
+          <a href="https://hex.school/zVBbk">解決文章網址</a>
+        </p>
       </div>
     </form>
   </div>
